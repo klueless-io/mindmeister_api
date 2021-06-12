@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'lib/mindmeister-api/version'
+require_relative 'lib/mindmeister_api/version'
 
 Gem::Specification.new do |spec|
   spec.required_ruby_version  = '>= 2.5'
@@ -38,7 +38,8 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
   # spec.extensions    = ['ext/mindmeister_api/extconf.rb']
 
-  spec.add_dependency 'k_log'                 , '~> 0.0.0'
+  spec.add_dependency 'k_log' , '~> 0.0.0'
+  spec.add_dependency 'rubyzip'
   # spec.add_dependency 'k_type'                , '~> 0.0.0'
   # spec.add_dependency 'k_util'                , '~> 0.0.0'
 end
