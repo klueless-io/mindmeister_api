@@ -5,14 +5,8 @@ RSpec.describe MindmeisterApi do
     expect(MindmeisterApi::VERSION).not_to be nil
   end
 
-  fit 'print secret' do
-    puts ENV['MINDMEISTER_PAT'][0..10]
-  end
-
-  it 'does something useful' do
-    # expect(false).to eq(true)
-
-    puts ENV['MINDMEISTER_PAT']
+  it 'personal access token is in environment' do
+    expect(ENV['MINDMEISTER_PAT']).not_to be_nil
   end
 
   it 'details about me' do
