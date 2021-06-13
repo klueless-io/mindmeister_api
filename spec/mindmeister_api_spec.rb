@@ -23,10 +23,11 @@ RSpec.describe MindmeisterApi do
     puts JSON.pretty_generate(json)
   end
 
-  fit 'uncompress .mind' do
+  it 'uncompress .mind' do
     path = '/Users/davidcruwys/dev/kgems/mindmeister_api/sample_maps'
     source = File.join(path, 'Print_Speak_Architecture.mind')
     target = File.join(path, 'map2.json')
+
     uncompress(source, target)
   end
 
@@ -38,6 +39,11 @@ RSpec.describe MindmeisterApi do
   def get_map(id)
     mindmeister_get(end_point: "api/v2/maps/#{id}")
   end
+
+  def get_mindmeister_map(id)
+    mindmeister_get(end_point: "api/v2/maps/#{id}.mind")
+  end
+
   # rubocop:enable Naming/AccessorMethodName
 
   def mindmeister_get(end_point:)
@@ -67,7 +73,7 @@ RSpec.describe MindmeisterApi do
     json
   end
 
-  MAX_SIZE = 50*(1024**2) # 1 MegaBytes
+  MAX_SIZE = 50 * (1024**2) # 1 MegaBytes
 
   def uncompress(source, target)
     Zip::File.open(source) do |zip_file|
