@@ -27,7 +27,7 @@ jobs:
         bundle install
     - name: Run tests
       env:
-        MINDMEISTER_PAT: ${{ unit_test.MINDMEISTER_PAT }}
+        MINDMEISTER_PAT: ${{ secrets.MINDMEISTER_PAT }}
       run: bundle exec rspec
     - name: Run rubocop
       run: bundle exec rubocop
