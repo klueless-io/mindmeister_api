@@ -14,20 +14,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Ruby
-    # To automatically get bug fixes and new Ruby versions for ruby/setup-ruby,
-    # change this to (see https://github.com/ruby/setup-ruby#versioning):
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: 2.7.1
-    - name: Install dependencies
-      run: |
-        gem install bundler -v 2.2.5
-        bundle install
     - name: Run tests
+      run: env
+    - name: Run tests2
+      run: echo "DAVID"
+    - name: Run tests3
+      run: echo $MINDMEISTER_PAT
       env:
         MINDMEISTER_PAT: ${{ secrets.MINDMEISTER_PAT }}
-      run: bundle exec rspec
-    - name: Run rubocop
-      run: bundle exec rubocop
+        XMEN: ${{ secrets.XMEN }}
+    - name: Run tests4
+      run: echo ${{ secrets.MINDMEISTER_PAT }} ${{ secrets.XMEN }}
+    - name: Run tests5
+      run: |
+        if [ "$MINDMEISTER_PAT" == "DAVE" ]
+        then
+          echo "Got Secret"
+        fi
+      env:
+        MINDMEISTER_PAT: ${{ secrets.MINDMEISTER_PAT }}
