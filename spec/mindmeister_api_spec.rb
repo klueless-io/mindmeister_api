@@ -6,7 +6,7 @@ RSpec.describe MindmeisterApi do
   end
 
   fit 'print secret' do
-    puts ENV['MINDMEISTER_PAT']
+    puts ENV['MINDMEISTER_PAT'][0..10]
   end
 
   it 'does something useful' do
@@ -77,9 +77,10 @@ RSpec.describe MindmeisterApi do
     json
   end
 
-  MAX_SIZE = 50 * (1024**2) # 1 MegaBytes
+  # MAX_SIZE = 50 * (1024**2) # 1 MegaBytes
 
   def uncompress(source, target)
+    # MAX_SIZE = 50 * (1024**2)
     Zip::File.open(source) do |zip_file|
       # # Handle entries one by one
       # zip_file.each do |entry|
