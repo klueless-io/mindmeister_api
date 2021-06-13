@@ -13,25 +13,27 @@ module MindmeisterApi
       print_nodes_as_table(list)
     end
 
+    # rubocop:disable Metrics/AbcSize
     def print_nodes_as_table(nodes)
       log.section_heading 'Mindmap'
 
       tp nodes,
-        :id,
-        :level,
-        { title: { width: 50, display_method: ->(row) { "#{' ' * ((row.level - 1) * 2)}#{row.title.gsub("\r", ' ')}" } } },
-        :rank,
-        { pos: { display_method: ->(row) { row.pos.nil? ? '' : "#{row.pos.reject(&:nil?).join(',')}" } } },
-        :floating,
-        { icon: { display_method: ->(row) { row.icon.nil? ? '' : "#{row.icon.reject(&:nil?).join(',')}" } } },
-        :style,
-        :note,
-        :link,
-        :task,
-        :attachments,
-        :image,
-        :boundary,
-        :video
+         :id,
+         :level,
+         { title: { width: 50, display_method: ->(row) { "#{' ' * ((row.level - 1) * 2)}#{row.title.gsub("\r", ' ')}" } } },
+         :rank,
+         { pos: { display_method: ->(row) { row.pos.nil? ? '' : row.pos.reject(&:nil?).join(',').to_s } } },
+         :floating,
+         { icon: { display_method: ->(row) { row.icon.nil? ? '' : row.icon.reject(&:nil?).join(',').to_s } } },
+         :style,
+         :note,
+         { link: { width: 30 } },
+         :task,
+         :attachments,
+         :image,
+         :boundary,
+         :video
     end
+    # rubocop:enable Metrics/AbcSize
   end
 end
