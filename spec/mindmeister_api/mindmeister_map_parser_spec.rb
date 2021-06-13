@@ -120,28 +120,4 @@ RSpec.describe MindmeisterApi::MindmeisterMapParser do
       end
     end
   end
-
-  describe '.node_list' do
-    subject { described_class.json_file_parser(file).parse.node_list }
-
-    let(:file) { valid_simple_mindmap_file }
-
-    # subject.map { |r| "#{' ' * (r.level*2)} - #{r.title}" }
-
-    # describe '.valid?' do
-    #   subject { described_class.json_file_parser(file).valid? }
-
-    #   context 'when file provided with invalid format' do
-    #     let(:file) { invalid_mindmap_file }
-
-    #     it { is_expected.to be_falsey }
-    #   end
-
-    #   context 'when file provided with valid format' do
-    #     let(:file) { valid_mindmap_file }
-
-    #     it { is_expected.to be_truthy }
-    #   end
-    # end
-  end
 end
