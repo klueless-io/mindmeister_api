@@ -5,6 +5,10 @@ RSpec.describe MindmeisterApi do
     expect(MindmeisterApi::VERSION).not_to be nil
   end
 
+  fit 'print secret' do
+    puts ENV['MINDMEISTER_PAT']
+  end
+
   it 'does something useful' do
     # expect(false).to eq(true)
 
