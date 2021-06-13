@@ -22,7 +22,7 @@ RSpec.describe MindmeisterApi do
   end
 
   it 'uncompress .mind' do
-    path = '/Users/davidcruwys/dev/kgems/mindmeister_api/sample_maps'
+    path = 'sample_maps'
     source = File.join(path, 'Print_Speak_Architecture.mind')
     target = File.join(path, 'map2.json')
 
