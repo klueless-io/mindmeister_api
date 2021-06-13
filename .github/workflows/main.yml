@@ -26,8 +26,4 @@ jobs:
         gem install bundler -v 2.2.5
         bundle install
     - name: Run tests
-      env:
-        MINDMEISTER_PAT: ${{ secrets.MINDMEISTER_PAT }}
-      run: bundle exec rspec
-    - name: Run rubocop
-      run: bundle exec rubocop
+      run: env
