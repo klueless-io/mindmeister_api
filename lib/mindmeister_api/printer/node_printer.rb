@@ -4,54 +4,34 @@
 module MindmeisterApi
   # Include the Printer namespace to have access to console printers
   module Printer
-    def print_nodes(rows = nil, format: :default)
-      log.section_heading 'Nodes'
+    include KLog::Logging
 
-      rows = Node.unscoped.all if rows.nil?
+    def print_mindmap(mindmap, take: nil)
+      list = NodeEnumerator.new(mindmap).list
+      list = list.take(take) if take
 
-      rows.each do |row|
-        print_node_detailed(row) if format == :detailed
-        print_node(row) if format == :default
-      end
-    end
-    alias print_default_nodes print_nodes
-
-    def print_nodes_as_table(rows = nil, format: :default)
-      log.section_heading 'Nodes'
-
-      rows = Node.unscoped.all if rows.nil?
-
-      tp rows, :id, :name, :node_type, :default, 'enterprise.name'
-    end
-    alias print_default_nodes_as_table print_nodes_as_table
-
-    # rubocop:disable Metrics/AbcSize
-    def print_node(row)
-      log.kv 'id', row.id
-      log.kv 'name', row.name
-      log.kv 'node_type', row.node_type
-      log.kv 'default', row.default
-
-      # Belongs to relationships
-      log.kv 'enterprise > name', row.enterprise.name if row.enterprise&.name
-
-      log.line
+      print_nodes_as_table(list)
     end
 
-    def print_node_detailed(row)
-      log.kv 'id', row.id
-      log.kv 'name', row.name
-      log.kv 'node_type', row.node_type
-      log.kv 'created_at', row.created_at
-      log.kv 'updated_at', row.updated_at
-      log.kv 'default', row.default
-      log.kv 'enterprise_id', row.enterprise_id
+    def print_nodes_as_table(nodes)
+      log.section_heading 'Mindmap'
 
-      # Belongs to relationships
-      log.kv 'enterprise > name', row.enterprise.name if row.enterprise&.name
-
-      log.line
+      tp nodes,
+        :id,
+        :level,
+        { title: { width: 50, display_method: ->(row) { "#{' ' * ((row.level - 1) * 2)}#{row.title.gsub("\r", ' ')}" } } },
+        :rank,
+        { pos: { display_method: ->(row) { row.pos.nil? ? '' : "#{row.pos.reject(&:nil?).join(',')}" } } },
+        :floating,
+        { icon: { display_method: ->(row) { row.icon.nil? ? '' : "#{row.icon.reject(&:nil?).join(',')}" } } },
+        :style,
+        :note,
+        :link,
+        :task,
+        :attachments,
+        :image,
+        :boundary,
+        :video
     end
-    # rubocop:enable Metrics/AbcSize
   end
 end
