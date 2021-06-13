@@ -3,6 +3,8 @@
 # Mind map node
 module MindmeisterApi
   class Node
+    attr_accessor :level
+
     attr_accessor :id
     attr_accessor :title
     attr_accessor :rank

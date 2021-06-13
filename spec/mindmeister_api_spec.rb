@@ -9,25 +9,25 @@ RSpec.describe MindmeisterApi do
     expect(ENV['MINDMEISTER_PAT']).not_to be_nil
   end
 
-  it 'details about me' do
-    json = get_me
+  # it 'details about me' do
+  #   json = get_me
 
-    puts JSON.pretty_generate(json)
-  end
+  #   puts JSON.pretty_generate(json)
+  # end
 
-  it 'details about a map' do
-    json = get_map('1923180718')
+  # it 'details about a map' do
+  #   json = get_map('1923180718')
 
-    puts JSON.pretty_generate(json)
-  end
+  #   puts JSON.pretty_generate(json)
+  # end
 
-  it 'uncompress .mind' do
-    path = 'sample_maps'
-    source = File.join(path, 'Print_Speak_Architecture.mind')
-    target = File.join(path, 'map2.json')
+  # it 'uncompress .mind' do
+  #   path = 'sample_maps'
+  #   source = File.join(path, 'Print_Speak_Architecture.mind')
+  #   target = File.join(path, 'map2.json')
 
-    uncompress(source, target)
-  end
+  #   uncompress(source, target)
+  # end
 
   # rubocop:disable Naming/AccessorMethodName
   def get_me

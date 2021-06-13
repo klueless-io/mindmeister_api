@@ -3,6 +3,8 @@
 module MindmeisterApi
   # Parse a Mindmeister .mind formatted content
   class MindmeisterMapParser
+    include KLog::Logging
+
     attr_reader :input_mindmap
     attr_reader :mindmap
 
@@ -32,16 +34,18 @@ module MindmeisterApi
     end
 
     def parse
-      return unless valid?
+      @mindmap = parse_node(input_mindmap['root'], 1) if valid?
 
-      @mindmap = parse_node(input_mindmap['root'])
+      self
     end
 
     private
 
     # rubocop:disable Metrics/AbcSize
-    def parse_node(input_node)
+    def parse_node(input_node, level)
       node = Node.new
+
+      node.level        = level
 
       node.id           = input_node['id']                  # DONE:
       node.title        = input_node['title']               # DONE:
@@ -60,9 +64,7 @@ module MindmeisterApi
       node.boundary     = input_node['boundary']            # TODO: ?
       node.video        = input_node['video']               # TODO: ?
 
-      node.children     = input_node['children'].map { |child| parse_node(child) } if input_node['children']
-
-      # attr_accessor :children
+      node.children     = input_node['children'].map { |child| parse_node(child, level + 1) } if input_node['children']
 
       node
     end
