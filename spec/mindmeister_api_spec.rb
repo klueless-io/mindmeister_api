@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe MindmeisterApi do
+  include MindmeisterApi::Printer
+
   it 'has a version number' do
     expect(MindmeisterApi::VERSION).not_to be nil
   end
@@ -9,25 +11,47 @@ RSpec.describe MindmeisterApi do
     expect(ENV['MINDMEISTER_PAT']).not_to be_nil
   end
 
-  # it 'details about me' do
-  #   json = get_me
+  it 'details about me' do
+    json = get_me
 
-  #   puts JSON.pretty_generate(json)
-  # end
+    puts JSON.pretty_generate(json)
+  end
 
-  # it 'details about a map' do
-  #   json = get_map('1923180718')
+  it 'details about a map' do
+    json = get_map('1923180718')
 
-  #   puts JSON.pretty_generate(json)
-  # end
+    puts JSON.pretty_generate(json)
+  end
 
-  # it 'uncompress .mind' do
-  #   path = 'sample_maps'
-  #   source = File.join(path, 'Print_Speak_Architecture.mind')
-  #   target = File.join(path, 'map2.json')
+  it 'details about a map in mindmeister format' do
+    content_list = get_mindmeister_map('1923180718')
 
-  #   uncompress(source, target)
-  # end
+    json_content = content_list.find_content('map.json')
+
+    if json_content
+      path = 'sample_maps'
+      File.write(File.join(path, 'map3.json'), json_content)
+
+      json = JSON.parse(json_content)
+      parser = MindmeisterApi::MindmeisterMapParser.new(json)
+      parser.parse
+
+      print_mindmap(parser.mindmap, take: 20)
+    end
+  end
+  # path = 'sample_maps'
+  # target = File.join(path, 'map3.json')
+
+  it 'uncompress .mind' do
+    path = 'sample_maps'
+    source_file = File.join(path, 'Print_Speak_Architecture.mind')
+
+    content_list = MindmeisterApi.zip.uncompress_file(source_file)
+
+    json_content = content_list.find_content('map.json')
+
+    File.write(File.join(path, 'map2.json'), json_content) if json_content
+  end
 
   # rubocop:disable Naming/AccessorMethodName
   def get_me
@@ -39,14 +63,20 @@ RSpec.describe MindmeisterApi do
   end
 
   def get_mindmeister_map(id)
-    mindmeister_get(end_point: "api/v2/maps/#{id}.mind")
+    response = mindmeister_request_response("api/v2/maps/#{id}.mind")
+
+    if response.code == '200'
+      MindmeisterApi.zip.uncompress_content(response.body)
+    else
+      MindmeisterApi::ZipContentList.new
+    end
   end
 
   # rubocop:enable Naming/AccessorMethodName
-
   def mindmeister_get(end_point:)
     response = mindmeister_request_response(end_point)
-    mindmeister_handle_response(response)
+
+    parse_json(response)
   end
 
   def personal_access_token
@@ -65,34 +95,9 @@ RSpec.describe MindmeisterApi do
     http.request(request)
   end
 
-  def mindmeister_handle_response(response)
+  def parse_json(response)
     json = {}
     json = JSON.parse(response.body) if response.code == '200'
     json
-  end
-
-  # MAX_SIZE = 50 * (1024**2) # 1 MegaBytes
-
-  def uncompress(source, target)
-    # MAX_SIZE = 50 * (1024**2)
-    Zip::File.open(source) do |zip_file|
-      # # Handle entries one by one
-      # zip_file.each do |entry|
-      #   puts "Extracting #{entry.name}"
-      #   raise 'File too large when extracted' if entry.size > MAX_SIZE
-
-      #   # Extract to file or directory based on name in the archive
-      #   # entry.extract
-
-      #   # Read into memory
-      #   content = entry.get_input_stream.read
-      #   # puts content
-      # end
-
-      # # Find specific entry
-      entry = zip_file.glob('map.json').first
-
-      File.write(target, entry.get_input_stream.read) if entry
-    end
   end
 end
