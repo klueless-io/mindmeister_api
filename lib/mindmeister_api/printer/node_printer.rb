@@ -24,15 +24,15 @@ module MindmeisterApi
          :rank,
          { pos: { display_method: ->(row) { row.pos.nil? ? '' : row.pos.reject(&:nil?).join(',').to_s } } },
          :floating,
-         { icon: { display_method: ->(row) { row.icon.nil? ? '' : row.icon.reject(&:nil?).join(',').to_s } } },
-         :style,
-         :note,
-         { link: { width: 30 } },
-         :task,
-         :attachments,
-         :image,
-         :boundary,
-         :video
+         { icon: { display_method: ->(row) { row.icon.nil? ? '' : row.icon.reject(&:nil?).join(',').to_s } } }
+      #  :style,
+      #  :note,
+      #  { link: { width: 30 } },
+      #  :task,
+      #  :attachments,
+      #  :image,
+      #  :boundary,
+      #  :video
     end
     # rubocop:enable Metrics/AbcSize
   end

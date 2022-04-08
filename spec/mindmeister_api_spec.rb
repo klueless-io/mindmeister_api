@@ -36,9 +36,18 @@ RSpec.describe MindmeisterApi do
       parser = MindmeisterApi::MindmeisterMapParser.new(json)
       parser.parse
 
-      print_mindmap(parser.mindmap, take: 20)
+      print_mindmap(parser.mindmap, take: 40)
     end
   end
+
+  it 'law of demeter' do
+    get_and_print_mindmap('1930722860', 'map-law_of_demeter.json')
+  end
+
+  fit 'printspeak architecture and test slides' do
+    get_and_print_mindmap('1923180718', 'printspeak-architecture.json')
+  end
+
   # path = 'sample_maps'
   # target = File.join(path, 'map3.json')
 
@@ -51,6 +60,23 @@ RSpec.describe MindmeisterApi do
     json_content = content_list.find_content('map.json')
 
     File.write(File.join(path, 'map2.json'), json_content) if json_content
+  end
+
+  def get_and_print_mindmap(id, outputfile)
+    content_list = get_mindmeister_map(id)
+
+    json_content = content_list.find_content('map.json')
+
+    if json_content
+      path = 'sample_maps'
+      File.write(File.join(path, outputfile), json_content)
+
+      json = JSON.parse(json_content)
+      parser = MindmeisterApi::MindmeisterMapParser.new(json)
+      parser.parse
+
+      print_mindmap(parser.mindmap, take: nil)
+    end
   end
 
   # rubocop:disable Naming/AccessorMethodName
@@ -80,6 +106,7 @@ RSpec.describe MindmeisterApi do
   end
 
   def personal_access_token
+    # @personal_access_token ||=  "7639aa7d92f49e567f7062476d44b2c6c0ac7a94a5fcf8e4cd366877b22db360" # ENV['MINDMEISTER_PAT']
     @personal_access_token ||= ENV['MINDMEISTER_PAT']
   end
 
